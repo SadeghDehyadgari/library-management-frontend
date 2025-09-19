@@ -10,16 +10,39 @@
     <header class="header">
       <div class="container">
         <div class="header-content">
+          <!-- mobile hamburger-btn -->
+          <button class="hamburger-btn" id="hamburgerBtn">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+
           <div class="logo">📚 Library Management</div>
+
+          <!-- main nav menu -->
           <nav class="nav">
-            <a href="dashboard.html" class="active">Dashboard</a>
+            <a href="dashboard.html">Dashboard</a>
+            <a href="books.html">Browse Books</a>
+            <a href="my-loans.html">My Loans</a>
+            <a href="login.html" id="logoutLink">Logout</a>
+          </nav>
+
+          <!-- mobile nav menu -->
+          <nav class="mobile-nav" id="mobileNav">
+            <button class="close-btn" id="closeBtn">✕</button>
+            <div class="user-info">
+              <div class="user-avatar">S</div>
+              <span class="user-name">Student Name</span>
+            </div>
+            <a href="dashboard.html">Dashboard</a>
             <a href="books.html">Browse Books</a>
             <a href="my-loans.html">My Loans</a>
             <a href="login.html">Logout</a>
           </nav>
+
           <div class="user-info">
-            <div class="user-avatar" id="userAvatar">S</div>
-            <span id="userName">Student Name</span>
+            <div class="user-avatar">S</div>
+            <span class="user-name">Student Name</span>
           </div>
         </div>
       </div>
@@ -73,6 +96,7 @@
     <script src="js/auth.js"></script>
     <script src="js/api.js"></script>
     <script src="js/utils.js"></script>
+    <script src="js/navigation.js"></script>
     <script src="js/dashboard.js"></script>
   </body>
 </html>

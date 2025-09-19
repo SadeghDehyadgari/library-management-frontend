@@ -2,17 +2,17 @@ async function loadUserDataToHeader() {
   try {
     const userData = await getCurrentUserProfile();
 
-    const userNameElement = document.getElementById("userName");
-    if (userNameElement) {
-      userNameElement.textContent = `${userData.data.user.firstName} ${userData.data.user.lastName}`;
-    }
+    const userNameElements = document.querySelectorAll(".user-name");
+    userNameElements.forEach((element) => {
+      element.textContent = `${userData.data.user.firstName} ${userData.data.user.lastName}`;
+    });
 
-    const userAvatarElement = document.getElementById("userAvatar");
-    if (userAvatarElement) {
-      userAvatarElement.textContent = userData.data.user.firstName.charAt(0);
-    }
+    const userAvatarElements = document.querySelectorAll(".user-avatar");
+    userAvatarElements.forEach((element) => {
+      element.textContent = userData.data.user.firstName.charAt(0);
+    });
   } catch (err) {
-    console.error("Error receiving user data");
+    console.error("Error receiving user data: ", err);
   }
 }
 

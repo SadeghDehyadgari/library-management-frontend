@@ -97,3 +97,45 @@ async function borrowBook(bookId) {
     throw new Error(err.message || "Unable to borrow book");
   }
 }
+
+async function getMyLoans() {
+  try {
+    const response = await fetch(`${BASE_URL}/loans/my-loans`, {
+      method: "GET",
+      headers: getAuthHeaders(),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Unable to fetch loans");
+    }
+
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw new Error(err.message || "Unabel to fetch loans");
+  }
+}
+
+async function returnBook(loanId) {
+  try {
+    console.log("Returning book...");
+
+    const response = await fetch(`${BASE_URL}/loans/${loanId}/return`, {
+      method: "POST",
+      headers: getAuthHeaders(),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Unable to return book");
+    }
+
+    return data;
+  } catch (err) {
+    console.error(err);
+    throw new Error(err.message || "Unable to return book");
+  }
+}

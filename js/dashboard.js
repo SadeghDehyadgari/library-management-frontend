@@ -6,26 +6,43 @@ document.addEventListener("DOMContentLoaded", function () {
 
 async function loadUserData() {
   try {
-    console.log("Receiving user data...");
+    const cachedUserData = getCache("userData");
+
+    if (cachedUserData && isCacheValid(cachedUserData)) {
+      displayUserData(cachedUserData.data);
+      return;
+    }
+
     const userData = await getCurrentUserProfile();
-    console.log(userData);
 
-    const studentNameElement = document.getElementById("studentName");
-    if (studentNameElement) {
-      studentNameElement.textContent = `${userData.data.user.firstName} ${userData.data.user.lastName}`;
-    }
+    setCache("userData", userData, 20);
 
-    const activeLoansElement = document.getElementById("activeLoans");
-    if (activeLoansElement && userData.data.stats) {
-      activeLoansElement.textContent = userData.data.stats.activeLoans;
-    }
-
-    const availableBooksElement = document.getElementById("availableBooks");
-    if (availableBooksElement && userData.data.stats) {
-      availableBooksElement.textContent = userData.data.stats.availableBooks;
-    }
+    displayUserData(userData.data);
   } catch (err) {
-    console.error(`Error receiving user data: ${err}`);
+    console.error("Error:", err);
     alert(`Error: ${err.message}`);
+  }
+}
+
+function displayUserData(userData) {
+  const studentNameElement = document.getElementById("studentName");
+
+  const user = userData.user || userData.data?.user;
+  const stats = userData.stats || userData.data?.stats;
+
+  if (studentNameElement && user) {
+    studentNameElement.textContent = `${user.firstName} ${user.lastName}`;
+  }
+
+  const activeLoansElement = document.getElementById("activeLoans");
+  const availableBooksElement = document.getElementById("availableBooks");
+
+  if (stats) {
+    if (activeLoansElement) {
+      activeLoansElement.textContent = stats.activeLoans;
+    }
+    if (availableBooksElement) {
+      availableBooksElement.textContent = stats.availableBooks;
+    }
   }
 }
