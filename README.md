@@ -3,6 +3,8 @@
 A complete **frontend** for a Library Management System built with **vanilla JavaScript, HTML, and CSS**.  
 This project interacts with a **RESTful API** to provide students with a seamless experience for browsing books, borrowing, returning, and managing their loans.
 
+[Watch live](https://sadeghdehyadgari.github.io/library-management-frontend/)
+
 ---
 
 ## ✨ Features
