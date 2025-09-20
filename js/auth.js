@@ -22,6 +22,9 @@ function getToken() {
 
 function logout() {
   document.cookie = `${TOKEN_COOKIE_NAME}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/`;
+
+  localStorage.removeItem("userData");
+  localStorage.removeItem("books");
 }
 
 function isLoggedIn() {

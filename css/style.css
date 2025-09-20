@@ -494,12 +494,6 @@ body {
 }
 
 /* hamburger menu styles */
-
-/* ==================== */
-/* منوی همبرگری موبایل */
-/* ==================== */
-
-/* استایل دکمه همبرگری */
 .hamburger-btn {
   display: none;
   flex-direction: column;
@@ -523,7 +517,7 @@ body {
   transition: all 0.3s ease;
 }
 
-/* منوی موبایل */
+/* mobile menu */
 .mobile-nav {
   position: fixed;
   top: 0;
@@ -558,9 +552,8 @@ body {
   color: #3498db;
 }
 
-/* اطلاعات کاربر در منوی موبایل */
 .mobile-nav .user-info {
-  display: none; /* ابتدا مخفی */
+  display: none;
   align-items: center;
   gap: 1rem;
   padding: 1rem 0;
@@ -568,7 +561,6 @@ body {
   margin-bottom: 1rem;
 }
 
-/* رسپانسیو برای تبلت و موبایل */
 @media (max-width: 768px) {
   .hamburger-btn {
     display: flex;
@@ -579,14 +571,13 @@ body {
   }
 
   .user-info {
-    display: none; /* مخفی کردن اطلاعات کاربر در هدر */
+    display: none;
   }
 
   .logo {
-    font-size: 1.2rem; /* کوچک‌تر کردن لوگو */
+    font-size: 1.2rem;
   }
 
-  /* نمایش اطلاعات کاربر در منوی موبایل */
   .mobile-nav .user-info {
     display: flex;
   }
@@ -616,7 +607,6 @@ body {
   }
 }
 
-/* لینک‌های منوی موبایل */
 .mobile-nav a {
   padding: 0.8rem 0;
   text-decoration: none;
@@ -631,4 +621,51 @@ body {
   background-color: #f8f9fa;
   border-radius: 6px;
   padding-left: 1rem;
+}
+
+/* Pagination Styles */
+.pagination-container {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 2rem 0;
+  padding: 1rem;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  padding: 0.5rem 1rem;
+  border: 2px solid #3498db;
+  background: white;
+  color: #3498db;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+  min-width: 44px;
+}
+
+.pagination-btn:hover {
+  background: #3498db;
+  color: white;
+  transform: translateY(-2px);
+}
+
+.pagination-btn.active {
+  background: #3498db;
+  color: white;
+  font-weight: bold;
+}
+
+/* برای صفحه‌های کوچک */
+@media (max-width: 480px) {
+  .pagination-container {
+    gap: 0.3rem;
+  }
+
+  .pagination-btn {
+    padding: 0.4rem 0.8rem;
+    min-width: 40px;
+    font-size: 0.9rem;
+  }
 }

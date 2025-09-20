@@ -1,244 +1,174 @@
-<div dir="rtl" lang="fa">
+# 📚 Library Management System - Frontend
 
-# ‫پروژه نهایی جاوااسکریپت - دوره‌ی ۱۱
-
-## ‫سیستم مدیریت کتابخانه
-
-‫در این پروژه، شما باید یک سیستم مدیریت کتابخانه کامل پیاده‌سازی کنید. بک‌اند این پروژه از قبل آماده شده و روی سرور قرار گرفته است. شما فقط باید فرانت‌اند را با JavaScript کامل کنید.
-
-**‫نکته مهم**: ‫این مستندات به صورت RTL (راست به چپ) نوشته شده است و باید در مرورگرهای فارسی نمایش داده شود.
-
-## ‫آنچه باید انجام دهید
-
-‫شما باید یک رابط کاربری کامل برای سیستم مدیریت کتابخانه بسازید که شامل موارد زیر باشد:
-
-1. **‫صفحه ورود** - ‫کاربران بتوانند وارد سیستم شوند
-2. **‫داشبورد دانشجو** - ‫نمایش آمار و اطلاعات شخصی
-3. **‫صفحه کتاب‌ها** - ‫نمایش لیست کتاب‌ها و امکان امانت گرفتن
-4. **‫صفحه امانت‌های من** - ‫مدیریت کتاب‌های امانت گرفته شده
-5. **‫مدیریت احراز هویت** - ‫ورود، خروج و حفظ وضعیت کاربر
-
-## ‫شروع کار
-
-### 1. ‫دریافت فایل‌های پروژه
-
-‫ابتدا فایل‌های قالب پروژه را از مخزن کلون کنید:
-
-```bash
-git clone git@github.com:karyar-js11/library-management-system-template.git
-cd library-management-system-template
-```
-
-### 2. ‫آدرس API
-
-‫بک‌اند پروژه روی سرور قرار گرفته و در دسترس است:
-
-**‫آدرس پایه API**: `https://karyar-library-management-system.liara.run/api/`
-
-**‫مستندات API**: `https://karyar-library-management-system.liara.run/api/docs/`
-
-### 3. ‫ساختار فایل‌ها
-
-‫پس از کلون کردن، ساختار فایل‌ها به این صورت خواهد بود:
-
-```
-library-templates/
-├── css/
-│   └── style.css          # استایل‌های آماده
-├── js/                    # پوشه کدهای JavaScript شما
-├── images/                # پوشه تصاویر
-├── index.html             # صفحه اصلی
-├── login.html             # صفحه ورود
-├── dashboard.html # داشبورد دانشجو
-├── books.html             # صفحه کتاب‌ها
-├── my-loans.html          # صفحه امانت‌های من
-└── README.md              # این فایل
-```
-
-## اطلاعات ورود
-
-### کاربران موجود در سیستم
-
-**دانشجویان (20 نفر):**
-- نام کاربری: آدرس ایمیل واقعی دانشجویان
-- رمز عبور: رمز عبور جداگانه برای هر دانشجو (ارسال شده از طریق ایمیل)
-
-### داده‌های موجود
-
-- **53 کتاب** در 10 دسته‌بندی مختلف
-- **20 دانشجو** با اطلاعات کامل
-
-## ‫API های موجود
-
-### ‫احراز هویت
-- `POST /api/auth/login` - ‫ورود کاربر
-- `GET /api/auth/me` - ‫دریافت پروفایل و آمار کاربر
-
-### ‫کتاب‌ها
-- `GET /api/books` - ‫دریافت لیست تمام کتاب‌ها
-- `GET /api/books/:id` - ‫دریافت جزئیات یک کتاب
-
-### ‫امانت‌ها
-- `GET /api/loans/my-loans` - ‫دریافت امانت‌های کاربر
-- `POST /api/loans` - ‫امانت گرفتن کتاب
-- `POST /api/loans/:id/return` - ‫بازگرداندن کتاب
-
-### ‫نحوه استفاده از API
-
-‫برای استفاده از API ها، باید درخواست‌های HTTP ارسال کنید. تمام درخواست‌ها (به جز ورود) نیاز به توکن JWT دارند که باید در header ارسال شود.
-
-## ‫وظایف شما
-
-### 1. ‫صفحه ورود (login.html)
-- ‫فرم ورود با فیلدهای ایمیل و رمز عبور
-- ‫ارسال درخواست به API برای ورود
-- ‫ذخیره توکن JWT در کوکی (بدون HttpOnly)
-- ‫هدایت به داشبورد پس از ورود موفق
-- ‫نمایش پیام خطا در صورت ورود ناموفق
-
-**‫فرآیند ورود:**
-1. ‫کاربر ایمیل و رمز عبور را وارد می‌کند
-2. ‫درخواست POST به `/api/auth/login` ارسال می‌شود
-3. ‫در صورت موفقیت، توکن JWT دریافت می‌شود
-4. ‫توکن در کوکی ذخیره می‌شود (بدون HttpOnly)
-5. ‫کاربر به صفحه داشبورد هدایت می‌شود
-
-### 2. ‫داشبورد دانشجو (dashboard.html)
-- ‫نمایش نام کاربر
-- ‫نمایش آمار (تعداد امانت‌های فعال، کتاب‌های موجود)
-- ‫دکمه‌های دسترسی سریع
-- ‫بارگذاری اطلاعات از API
-
-### 3. ‫صفحه کتاب‌ها (books.html)
-- ‫نمایش لیست کتاب‌ها در قالب کارت
-- ‫نمایش اطلاعات: عنوان، نویسنده، ISBN، دسته‌بندی، تعداد موجود
-- ‫دکمه امانت گرفتن برای کتاب‌های موجود
-- ‫دکمه غیرفعال برای کتاب‌های ناموجود
-- **‫کش کردن نتایج API** ‫برای 5 دقیقه در localStorage
-
-### 4. ‫صفحه امانت‌های من (my-loans.html)
-- ‫نمایش لیست امانت‌های کاربر
-- ‫نمایش اطلاعات کتاب و تاریخ امانت
-- ‫دکمه بازگرداندن کتاب
-- ‫آمار امانت‌ها
-
-### 5. ‫مدیریت احراز هویت
-- ‫بررسی وجود توکن در کوکی
-- ‫هدایت به صفحه ورود در صورت عدم وجود توکن
-- ‫اضافه کردن توکن به درخواست‌های API
-- ‫خروج از سیستم و پاک کردن توکن
-
-### 6. ‫حفاظت از صفحات
-- **‫کاربران غیروارد**: ‫فقط می‌توانند صفحات `index.html` و `login.html` را ببینند
-- **‫کاربران وارد شده**: ‫نمی‌توانند `login.html` را ببینند و باید به داشبورد هدایت شوند
-- **‫بررسی وضعیت ورود**: ‫در هر صفحه بررسی شود که کاربر وارد شده است یا نه
-
-## ‫نکات مهم
-
-### ‫احراز هویت
-- ‫تمام درخواست‌های API (به جز ورود) نیاز به توکن JWT دارند
-- ‫توکن را در header با نام `Authorization` و مقدار `Bearer <token>` ارسال کنید
-- ‫توکن را در کوکی ذخیره کنید (بدون HttpOnly)
-
-### ‫مدیریت خطا
-- ‫همیشه پاسخ API را بررسی کنید
-- ‫در صورت خطا، پیام مناسب نمایش دهید
-- ‫وضعیت loading را برای کاربر نشان دهید
-
-### ‫طراحی
-- ‫از استایل‌های آماده در فایل `style.css` استفاده کنید
-- ‫طراحی واکنش‌گرا (responsive) را رعایت کنید
-- ‫تجربه کاربری مناسب فراهم کنید
-
-### ‫نکات فنی
-
-**‫ذخیره توکن در کوکی:**
-- ‫از `document.cookie` برای ذخیره و بازیابی توکن استفاده کنید
-- ‫توکن را بدون HttpOnly ذخیره کنید تا JavaScript بتواند به آن دسترسی داشته باشد
-- ‫در هر درخواست API، توکن را از کوکی بخوانید و در header ارسال کنید
-
-**‫کش کردن داده‌ها:**
-- ‫نتایج API کتاب‌ها را برای 5 دقیقه در localStorage ذخیره کنید
-- ‫قبل از درخواست جدید، ابتدا بررسی کنید که آیا داده‌های کش شده معتبر هستند یا نه
-- ‫در صورت منقضی شدن کش، درخواست جدید ارسال کنید
-
-**‫حفاظت از صفحات:**
-- ‫در ابتدای هر صفحه (به جز index و login)، بررسی کنید که کاربر وارد شده است
-- ‫اگر کاربر وارد نشده، به صفحه login هدایت کنید
-- ‫اگر کاربر وارد شده و در صفحه login است، به داشبورد هدایت کنید
-
-## ‫معیارهای ارزیابی
-
-### ‫عملکرد (45%)
-- ‫صحت پیاده‌سازی API و اتصال به بک‌اند
-- ‫مدیریت احراز هویت و کوکی‌ها
-- ‫مدیریت خطاها و استثناها
-- ‫امنیت و اعتبارسنجی ورودی‌ها
-- ‫عملکرد و بهینه‌سازی کد
-- ‫پیاده‌سازی کش و localStorage
-- ‫حفاظت از صفحات و routing
-- ‫مدیریت state و data flow
-- ‫صحت عملکرد تمام ویژگی‌ها
-
-### ‫معماری کد (35%)
-- ‫ساختار و سازماندهی کد
-- ‫استفاده از بهترین روش‌های JavaScript
-- ‫تقسیم‌بندی منطقی فایل‌ها و توابع
-- ‫خوانایی و قابل نگهداری بودن کد
-- ‫استفاده صحیح از async/await و Promise
-- ‫مدیریت رویدادها و event handling
-- ‫پیاده‌سازی الگوهای مناسب JavaScript
-
-### ‫رابط کاربری (15%)
-- ‫طراحی و ظاهر صفحات
-- ‫واکنش‌گرایی (responsive design)
-- ‫تجربه کاربری (UX)
-- ‫سازگاری با مرورگرهای مختلف
-- ‫استفاده صحیح از CSS و HTML
-
-### ‫ویژگی‌های جدید (5%)
-- ‫نوآوری و خلاقیت
-- ‫ویژگی‌های اضافی و بهبودها
-- ‫بهینه‌سازی‌های شخصی
-
-## ‫تحویل پروژه
-
-### ‫فایل‌های مورد نیاز
-- ‫تمام فایل‌های HTML
-- ‫فایل‌های JavaScript در پوشه `js/`
-- ‫فایل‌های CSS (در صورت تغییر)
-- ‫فایل README.md با توضیح پروژه
-
-### ‫نحوه تحویل
-
-#### 1. ‫ایجاد مخزن Git
-- ‫یک مخزن خالی در GitHub/GitLab ایجاد کنید
-- ‫نام مخزن: `library-management-frontend` یا مشابه
-- ‫مخزن باید **عمومی (Public)** باشد
-
-#### 2. ‫کار با Git
-- ‫ابتدا قالب‌ها را از مخزن اصلی کلون کنید
-- ‫سپس مخزن را به مخزن شخصی خودتان متصل کنید
-- ‫فایل‌ها را اضافه کرده و کامیت اولیه ایجاد کنید
-- ‫تغییرات را به مخزن شخصی خود push کنید
-
-#### 3. ‫توسعه پروژه
-- ‫هر تغییر مهم را کامیت کنید
-- ‫پیام‌های کامیت واضح و توصیفی بنویسید
-- ‫به طور منظم تغییرات را push کنید
-
-#### 4. ‫تحویل نهایی
-- ‫لینک مخزن عمومی خود را ارسال کنید
-- ‫در README.md توضیح دهید که چه کاری انجام داده‌اید
-- ‫مطمئن شوید که آخرین تغییرات push شده‌اند
-
-### ‫مهلت تحویل
-**‫تاریخ نهایی**: ‫[تاریخ مشخص شده توسط استاد]
+A complete **frontend** for a Library Management System built with **vanilla JavaScript, HTML, and CSS**.  
+This project interacts with a **RESTful API** to provide students with a seamless experience for browsing books, borrowing, returning, and managing their loans.
 
 ---
 
-**‫موفق باشید!** 🚀
+## ✨ Features
 
-‫برای سوالات و راهنمایی بیشتر، با استاد تماس بگیرید.
+### 🔐 Authentication
 
-</div>
+- User login with email and password
+- JWT token storage in cookies
+- Protected routes (authentication required)
+- Automatic redirect to login if token is missing or expired
+- Logout functionality with token cleanup
+
+### 📊 Dashboard
+
+- Display of user profile (name, avatar)
+- Statistics: active loans and available books
+- Quick access buttons to key sections
+- Data caching for better performance
+
+### 📚 Books Management
+
+- Browse all available books in a grid layout
+- Book details: title, author, ISBN, category, available copies
+- Borrow functionality for available books
+- Smart caching (5-minute cache duration)
+- Responsive design for all devices
+
+### 📋 My Loans
+
+- List of all user's book loans
+- Loan status: active/returned
+- Return book functionality
+- Client-side pagination (10 items per page)
+- Statistics based on all loans (not just current page)
+
+### 📱 Responsive Design
+
+- Hamburger menu for mobile/tablet devices
+- Smooth animations and transitions
+- Mobile-friendly navigation
+- Adaptive layout for different screen sizes
+
+### ⚡ Performance Optimizations
+
+- LocalStorage caching for API responses
+- Efficient re-rendering with pagination
+- Debounced event handlers
+- Fallback to cached data when API fails
+
+---
+
+## 🛠️ Technical Implementation
+
+### Architecture
+
+- Modular JavaScript (ES6+)
+- RESTful API integration
+- Client-side routing protection
+- Centralized error handling
+
+### API Integration
+
+- **Base URL:** `https://karyar-library-management-system.liara.run/api`
+- Authentication with JWT tokens
+- Comprehensive error handling
+- Loading states for better UX
+
+### Key Functions
+
+- `loginUser()` → Handle user authentication
+- `getBooks()` → Fetch all books with caching
+- `borrowBook()` → Handle book borrowing
+- `getMyLoans()` → Fetch user's loans
+- `returnBook()` → Handle book return
+- `checkAuthAndRedirect()` → Route protection
+
+### Cache System
+
+- 5-minute cache duration for books data
+- Automatic cache invalidation on data changes
+- Fallback to cached data when API fails
+- Efficient cache management utilities
+
+### Responsive Features
+
+- Mobile-first design approach
+- Hamburger menu with smooth animations
+- Adaptive grid layouts
+- Touch-friendly interface elements
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Modern web browser with JavaScript enabled
+- Access to the backend API
+
+### Installation
+
+1. Clone the repository
+2. Open `index.html` in a web browser
+3. Use provided credentials to login
+
+### Project Structure
+
+project/
+├── css/
+│ └── style.css # Main stylesheet
+├── js/
+│ ├── api.js # API communication
+│ ├── auth.js # Authentication utilities
+│ ├── utils.js # Helper functions
+│ ├── navigation.js # Mobile menu handling
+│ ├── dashboard.js # Dashboard functionality
+│ ├── books.js # Books page functionality
+│ └── my-loans.js # My Loans functionality
+├── index.html # Landing page
+├── login.html # Login page
+├── dashboard.html # Student dashboard
+├── books.html # Books browsing page
+└── my-loans.html # User loans management
+
+---
+
+## 🎯 Usage
+
+- **Login** → Enter your credentials on the login page
+- **Dashboard** → View your statistics and quick access options
+- **Browse Books** → Explore available books and borrow them
+- **Manage Loans** → View and return your borrowed books
+- **Responsive** → Use on desktop, tablet, or mobile devices
+
+---
+
+## 🔧 Technical Details
+
+### Browser Support
+
+- Chrome (recommended)
+- Firefox
+- Safari
+- Edge
+
+### Performance Features
+
+- Efficient DOM manipulation
+- Minimal re-renders
+- Smart event delegation
+- Optimized API calls
+
+### Security Features
+
+- JWT token validation
+- Route protection
+- XSS prevention
+- Secure cookie handling
+
+---
+
+## 📞 Support
+
+For issues or questions regarding the frontend implementation:
+
+- Check the browser console for error messages
+- Ensure you have a stable internet connection to access the API
+
+> ⚠️ **Note:** This is a frontend-only implementation that requires a functioning backend API to work properly.

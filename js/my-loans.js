@@ -1,3 +1,8 @@
+let currentPage = 1;
+const loansPerPage = 10;
+let allLoansData = [];
+let totalPages = 1;
+
 document.addEventListener("DOMContentLoaded", function () {
   checkAuthAndRedirect();
   loadUserDataToHeader();
@@ -7,9 +12,13 @@ document.addEventListener("DOMContentLoaded", function () {
 async function loadMyLoans() {
   try {
     const loansData = await getMyLoans();
-    console.log(loansData);
+    console.log("Data from API: ", loansData);
+    allLoansData = loansData.data || [];
 
-    displayLoans(loansData);
+    totalPages = Math.ceil(allLoansData.length / loansPerPage);
+
+    displayPaginatedLoans();
+    updateLoanStats();
   } catch (err) {
     console.error(err);
     alert(`Error: ${err.message}`);
@@ -17,15 +26,12 @@ async function loadMyLoans() {
 }
 
 function displayLoans(loansData) {
-  console.log("displaying loans");
-
   const loansTableBody = document.querySelector(".table tbody");
   const totalLoansElement = document.querySelector(".card-header span");
 
-  if (!loansTableBody || !totalLoansElement) {
-    console.error("Page elements were not found");
-    return;
-  }
+  if (!loansTableBody || !totalLoansElement) return;
+
+  loansTableBody.innerHTML = "";
 
   if (!loansData.success || !loansData.data || loansData.data.length === 0) {
     loansTableBody.innerHTML = `
@@ -39,15 +45,15 @@ function displayLoans(loansData) {
     return;
   }
 
-  totalLoansElement.textContent = `Total: ${loansData.data.length} loans`;
+  const startItem = (currentPage - 1) * loansPerPage + 1;
+  const endItem = Math.min(currentPage * loansPerPage, allLoansData.length);
 
-  loansTableBody.innerHTML = "";
+  totalLoansElement.textContent = `Total: ${allLoansData.length} loans (showing ${startItem}-${endItem})`;
+
   loansData.data.forEach((loan) => {
     const row = createLoanRow(loan);
     loansTableBody.innerHTML += row;
   });
-
-  updateLoanStats(loansData.data);
 
   attachReturnEventListeners();
 
@@ -79,9 +85,11 @@ function createLoanRow(loan) {
     `;
 }
 
-function updateLoanStats(loans) {
-  const activeLoans = loans.filter((loan) => loan.status === "active").length;
-  const returnedLoans = loans.filter(
+function updateLoanStats() {
+  const activeLoans = allLoansData.filter(
+    (loan) => loan.status === "active"
+  ).length;
+  const returnedLoans = allLoansData.filter(
     (loan) => loan.status === "returned"
   ).length;
 
@@ -132,5 +140,72 @@ async function handleReturnBook(event) {
 
     button.disabled = false;
     button.textContent = "Return";
+  }
+}
+
+function displayPaginatedLoans() {
+  const startIndex = (currentPage - 1) * loansPerPage;
+  const endIndex = Math.min(startIndex + loansPerPage, allLoansData.length);
+
+  const currentPageData = allLoansData.slice(startIndex, endIndex);
+
+  const paginatedData = {
+    success: true,
+    data: currentPageData,
+    totalCount: allLoansData.length,
+  };
+
+  displayLoans(paginatedData);
+  updateLoanStats();
+  renderPagination();
+}
+
+function renderPagination() {
+  const paginationContainer = document.getElementById("paginationContainer");
+  if (!paginationContainer) return;
+
+  paginationContainer.innerHTML = "";
+
+  if (totalPages <= 1) return;
+
+  console.log(`Rendering pagination - Page ${currentPage} of ${totalPages}`);
+
+  if (currentPage > 1) {
+    const prevBtn = document.createElement("button");
+    prevBtn.textContent = "← Previous";
+    prevBtn.className = "pagination-btn";
+    prevBtn.onclick = () => {
+      currentPage--;
+      displayPaginatedLoans();
+    };
+    paginationContainer.appendChild(prevBtn);
+  }
+
+  for (let i = 1; i <= totalPages; i++) {
+    const pageBtn = document.createElement("button");
+    pageBtn.textContent = i;
+    pageBtn.className = "pagination-btn";
+
+    if (i === currentPage) {
+      pageBtn.classList.add("active");
+    }
+
+    pageBtn.onclick = () => {
+      currentPage = i;
+      displayPaginatedLoans();
+    };
+
+    paginationContainer.appendChild(pageBtn);
+  }
+
+  if (currentPage < totalPages) {
+    const nextBtn = document.createElement("button");
+    nextBtn.textContent = "Next →";
+    nextBtn.className = "pagination-btn";
+    nextBtn.onclick = () => {
+      currentPage++;
+      displayPaginatedLoans();
+    };
+    paginationContainer.appendChild(nextBtn);
   }
 }

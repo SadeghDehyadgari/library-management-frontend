@@ -48,6 +48,8 @@ function initializeMobileMenu() {
       console.log("keydown works");
     }
   });
+
+  setupLogout();
 }
 
 // keeping a separate function for closing mobile menu just in case
@@ -59,4 +61,22 @@ function closeMobileMenu() {
     mobileNav.classList.remove("active");
     body.style.overflow = "";
   }
+}
+
+function setupLogout() {
+  const logoutButtons = document.querySelectorAll(
+    "#logoutLink, a[href='login.html']"
+  );
+
+  logoutButtons.forEach((button) => {
+    button.addEventListener("click", function (event) {
+      event.preventDefault();
+      handleLogout();
+    });
+  });
+}
+
+function handleLogout() {
+  logout();
+  window.location.href = "login.html";
 }
