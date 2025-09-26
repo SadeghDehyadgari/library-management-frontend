@@ -234,4 +234,8 @@ function displayBookDetails(book) {
       document.body.style.overflow = "";
     }
   };
+
+  modal.addEventListener("close", () => {
+    document.body.style.overflow = "";
+  });
 }
