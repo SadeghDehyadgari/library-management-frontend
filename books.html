@@ -273,6 +273,51 @@
         </div>
       </div>
     </main>
+    <!-- modal box -->
+    <dialog id="bookDetailsModal" class="modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 id="modalBookTitle">Book Title</h2>
+          <button class="close-modal" id="closeModal">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="modal-grid">
+            <div class="modal-column">
+              <div class="info-group">
+                <label>Author:</label>
+                <span id="modalBookAuthor">-</span>
+              </div>
+              <div class="info-group">
+                <label>ISBN:</label>
+                <span id="modalBookISBN">-</span>
+              </div>
+              <div class="info-group">
+                <label>Category:</label>
+                <span id="modalBookCategory">-</span>
+              </div>
+            </div>
+            <div class="modal-column">
+              <div class="info-group">
+                <label>Publication Year:</label>
+                <span id="modalBookYear">-</span>
+              </div>
+              <div class="info-group">
+                <label>Publisher:</label>
+                <span id="modalBookPublisher">-</span>
+              </div>
+              <div class="info-group">
+                <label>Available Copies:</label>
+                <span id="modalBookCopies">-</span>
+              </div>
+            </div>
+          </div>
+          <div class="info-group full-width">
+            <label>Description:</label>
+            <p id="modalBookDescription">-</p>
+          </div>
+        </div>
+      </div>
+    </dialog>
     <script src="js/auth.js"></script>
     <script src="js/api.js"></script>
     <script src="js/utils.js"></script>

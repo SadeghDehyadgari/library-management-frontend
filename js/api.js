@@ -139,3 +139,22 @@ async function returnBook(loanId) {
     throw new Error(err.message || "Unable to return book");
   }
 }
+
+async function getBookDetails(bookId) {
+  try {
+    const response = await fetch(`${BASE_URL}/books/${bookId}`, {
+      method: "GET",
+      headers: getAuthHeaders(),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "Error receiving book details");
+    }
+
+    return data;
+  } catch (err) {
+    throw new Error(err.message || "Unable to connect to server");
+  }
+}

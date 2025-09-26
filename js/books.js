@@ -142,10 +142,96 @@ async function handleBorrowBook(event) {
   }
 }
 
-function handleViewDetails(event) {
+async function handleViewDetails(event) {
   const card = event.target.closest(".card");
-  const title = card.querySelector("h3").textContent;
-  console.log(`Viewing details of ${title}`);
+  const bookId =
+    card.querySelector(".btn-primary")?.getAttribute("data-book-id") ||
+    card.querySelector(".btn-secondary")?.getAttribute("data-book-id");
 
-  alert(`Viewing details of ${title}`);
+  if (!bookId) {
+    console.error("Book ID not found");
+    alert("Book ID not found");
+    return;
+  }
+
+  console.log(`Viewing details of book ID: ${bookId}`);
+
+  try {
+    // اول سعی می‌کنیم از داده‌های cached شده استفاده کنیم
+    const cachedBooks = getCache("books");
+
+    if (cachedBooks && cachedBooks.data && cachedBooks.data.data) {
+      const book = cachedBooks.data.data.find((b) => b.id === bookId);
+
+      if (book) {
+        console.log("Using cached book data:", book);
+        displayBookDetails(book);
+        const modal = document.getElementById("bookDetailsModal");
+        modal.showModal();
+        return;
+      }
+    }
+
+    event.target.disabled = true;
+    event.target.textContent = "Loading...";
+
+    const bookDetails = await getBookDetails(bookId);
+    console.log("Book details received:", bookDetails);
+
+    displayBookDetails(bookDetails.book);
+    const modal = document.getElementById("bookDetailsModal");
+    modal.showModal();
+  } catch (err) {
+    console.error("Error fetching book details:", err);
+
+    const cachedBooks = getCache("books");
+    if (cachedBooks && cachedBooks.data && cachedBooks.data.data) {
+      const book = cachedBooks.data.data.find((b) => b.id === bookId);
+      if (book) {
+        alert("Using cached data (API unavailable)");
+        displayBookDetails(book);
+        const modal = document.getElementById("bookDetailsModal");
+        modal.showModal();
+        return;
+      }
+    }
+    alert(`Error loading book details: ${err.message}`);
+  } finally {
+    event.target.disabled = false;
+    event.target.textContent = "View Details";
+  }
+}
+
+function displayBookDetails(book) {
+  document.getElementById("modalBookTitle").textContent = book.title;
+  document.getElementById("modalBookAuthor").textContent = book.author;
+  document.getElementById("modalBookISBN").textContent = book.isbn;
+  document.getElementById("modalBookCategory").textContent =
+    book.category?.name || "N/A";
+  document.getElementById("modalBookYear").textContent =
+    book.publicationYear || "N/A";
+  document.getElementById("modalBookPublisher").textContent =
+    book.publisher || "N/A";
+  document.getElementById(
+    "modalBookCopies"
+  ).textContent = `${book.availableCopies} / ${book.totalCopies}`;
+  document.getElementById("modalBookDescription").textContent =
+    book.description || "No description available";
+
+  const closeButton = document.getElementById("closeModal");
+  const modal = document.getElementById("bookDetailsModal");
+
+  document.body.style.overflow = "hidden";
+
+  closeButton.onclick = () => {
+    modal.close();
+    document.body.style.overflow = "";
+  };
+
+  modal.onclick = (event) => {
+    if (event.target === modal) {
+      modal.close();
+      document.body.style.overflow = "";
+    }
+  };
 }
