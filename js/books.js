@@ -18,6 +18,9 @@ async function loadBooks() {
     const cachedBooks = getCache("books");
     if (cachedBooks && isCacheValid(cachedBooks)) {
       renderBooks(cachedBooks.data);
+      initializeFilterToggle();
+      populateCategoryFilter();
+      initializeSearch();
       return;
     }
 
@@ -30,12 +33,18 @@ async function loadBooks() {
     }
 
     renderBooks(booksData);
+    initializeFilterToggle();
+    populateCategoryFilter();
+    initializeSearch();
   } catch (err) {
     console.error("error while receiving books:", err);
     const cachedBooks = getCache("books");
     if (cachedBooks) {
       console.log("Using cached data as fallback");
       renderBooks(cachedBooks.data);
+      initializeFilterToggle();
+      populateCategoryFilter();
+      initializeSearch();
     } else {
       alert("Error: " + err.message);
     }
@@ -110,7 +119,9 @@ function attachEventListeners() {
     ".btn-secondary:not([disabled])"
   );
   viewDetailsButtons.forEach((button) => {
-    button.addEventListener("click", handleViewDetails);
+    if (button.textContent.trim() === "View Details") {
+      button.addEventListener("click", handleViewDetails);
+    }
   });
 
   console.log(
@@ -238,4 +249,129 @@ function displayBookDetails(book) {
   modal.addEventListener("close", () => {
     document.body.style.overflow = "";
   });
+}
+
+function initializeFilterToggle() {
+  const toggleBtn = document.getElementById("toggleFilters");
+  const filtersSection = document.getElementById("advancedFilters");
+  const filterIcon = toggleBtn.querySelector(".filter-icon");
+
+  toggleBtn.addEventListener("click", () => {
+    filtersSection.classList.toggle("hidden");
+
+    filterIcon.classList.toggle("expanded");
+
+    const isExpanded = !filtersSection.classList.contains("hidden");
+    toggleBtn.querySelector("span").textContent = isExpanded
+      ? "Hide Filters"
+      : "Filters";
+  });
+}
+
+function populateCategoryFilter() {
+  const categoryFilter = document.getElementById("categoryFilter");
+  const cachedBooks = getCache("books");
+
+  if (!cachedBooks || !cachedBooks.data || !cachedBooks.data.data) {
+    console.log("No cached books data available for categories");
+    return;
+  }
+
+  while (categoryFilter.children.length > 1) {
+    categoryFilter.removeChild(categoryFilter.lastChild);
+  }
+
+  const categories = [
+    ...new Set(cachedBooks.data.data.map((book) => book.category.name)),
+  ];
+
+  console.log("Found categories:", categories);
+
+  categories.forEach((category) => {
+    const option = document.createElement("option");
+    option.value = category;
+    option.textContent = category;
+    categoryFilter.appendChild(option);
+  });
+}
+
+function performSearch() {
+  console.log("Performing search...");
+
+  const searchTerm = document
+    .getElementById("searchInput")
+    .value.toLowerCase()
+    .trim();
+  const selectedCategory = document.getElementById("categoryFilter").value;
+  const availability = document.getElementById("availabilityFilter").value;
+
+  const cachedBooks = getCache("books");
+  if (!cachedBooks || !cachedBooks.data || !cachedBooks.data.data) {
+    console.log("No books data available for search");
+    return;
+  }
+
+  let filteredBoodks = cachedBooks.data.data.filter((book) => {
+    const matchesSearch =
+      !searchTerm ||
+      book.title.toLowerCase().includes(searchTerm) ||
+      book.author.toLowerCase().includes(searchTerm) ||
+      book.category.name.toLowerCase().includes(searchTerm);
+
+    const matchesCategory =
+      !selectedCategory || book.category.name === selectedCategory;
+
+    const matchesAvailability =
+      !availability ||
+      (availability === "available" && book.availableCopies > 0) ||
+      (availability === "unavailable" && book.availableCopies === 0);
+
+    return matchesSearch && matchesCategory && matchesAvailability;
+  });
+
+  console.log(`Found ${filteredBoodks.length} books after filtering`);
+
+  renderBooks({ success: true, data: filteredBoodks });
+}
+
+function clearSearch(event) {
+  console.log("Clearing search...");
+
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  document.getElementById("searchInput").value = "";
+  document.getElementById("categoryFilter").value = "";
+  document.getElementById("availabilityFilter").value = "";
+
+  loadBooks();
+}
+
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
+
+function initializeSearch() {
+  const searchBtn = document.getElementById("searchBtn");
+  const clearBtn = document.getElementById("clearSearch");
+  const searchInput = document.getElementById("searchInput");
+  const categoryFilter = document.getElementById("categoryFilter");
+  const availabilityFilter = document.getElementById("availabilityFilter");
+
+  searchBtn.addEventListener("click", performSearch);
+  clearBtn.addEventListener("click", clearSearch);
+  searchInput.addEventListener("input", debounce(performSearch, 300));
+  categoryFilter.addEventListener("change", performSearch);
+  availabilityFilter.addEventListener("change", performSearch);
+
+  console.log("Search functionality initialized");
 }

@@ -54,7 +54,39 @@
         <p style="color: #666; margin-bottom: 2rem">
           Explore our collection and find your next read.
         </p>
-
+        <!-- Search section -->
+        <div class="card">
+          <div class="search-bar">
+            <div class="search-input">
+              <input
+                type="text"
+                id="searchInput"
+                class="form-input"
+                placeholder="Search by title, author, or category..."
+              />
+            </div>
+            <button id="searchBtn" class="btn btn-primary">Search</button>
+            <button id="clearSearch" class="btn btn-secondary">Clear</button>
+            <button id="toggleFilters" class="btn btn-outline">
+              <span>Filters</span><span class="filter-icon"></span>
+            </button>
+          </div>
+          <div
+            class="filter-group hidden"
+            id="advancedFilters"
+            style="margin-top: 1rem"
+          >
+            <select id="categoryFilter" class="form-select">
+              <option value="">All Categories</option>
+              <!-- To be filled dynamically -->
+            </select>
+            <select id="availabilityFilter" class="form-select">
+              <option value="">All Books</option>
+              <option value="available">Available Only</option>
+              <option value="unavailable">Unavailable Only</option>
+            </select>
+          </div>
+        </div>
         <!-- Books Grid -->
         <div class="grid grid-3" id="booksContainer">
           <!-- Book Card 1 -->
@@ -273,7 +305,7 @@
         </div>
       </div>
     </main>
-    <!-- modal box -->
+    <!-- Modal box -->
     <dialog id="bookDetailsModal" class="modal">
       <div class="modal-content">
         <div class="modal-header">
